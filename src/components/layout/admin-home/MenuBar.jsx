@@ -191,10 +191,13 @@ const MenuBar = () => {
             </li>
 
             <li>
-              <a href="settings.html"><i className="fa fa-cog"></i> <span>Settings</span></a>
+              <a href="/admin/home/settings"><i className="fa fa-cog"></i> <span>Settings</span></a>
             </li>
             <li class="active">
                 <a href="/admin/home/roles-permissions"><i class="fa fa-key"></i> <span>Roles & Permissions</span></a>
+            </li>
+            <li class="active">
+                <a href="/admin/home/leave-type"><i class="fa fa-cogs"></i> <span>Leave Type</span></a>
             </li>
           </ul>
         </div>
