@@ -47,6 +47,9 @@ const AssetForm = lazy(() => import("../pages/admin/assets/AssetForm"));
 const Assets = lazy(() => import("../pages/admin/assets/Assets"));
 const Role = lazy(() => import("../pages/admin/role/Role"));
 const RoleForm = lazy(() => import("../pages/admin/role/RoleForm"));
+const CompanySettings = lazy(() => import("../pages/admin/CompanySettings"));
+const LeaveType = lazy(() => import("../pages/admin/LeaveType"));
+const LeaveTypeForm = lazy(() => import("../pages/admin/LeaveTypeForm"));
 
 const router = createBrowserRouter([
     {
@@ -278,6 +281,18 @@ const router = createBrowserRouter([
                             },
                         ],
                     },
+                    {
+                        path: "settings",
+                        Component: CompanySettings,
+                    },
+                    {
+                        path: "leave-type",
+                        Component: LeaveType,
+                    },
+                    {
+                        path: "add-leave-type",
+                        Component: LeaveTypeForm,
+                    }
                 ]
             },
             {
@@ -291,11 +306,7 @@ const router = createBrowserRouter([
             {
                 path: "forgot-password",
                 Component: ForgotPassword,
-            },
-            {
-                path: "change-password",
-                Component: ChangePassword,
-            }
+            },            
         ],
     },
     {
