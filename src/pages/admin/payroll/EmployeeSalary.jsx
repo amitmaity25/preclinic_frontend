@@ -76,7 +76,7 @@ const EmployeeSalary = () => {
                             <tbody>
                                 <tr>
                                     <td>
-                                        <img className="rounded-circle" src="assets/img/user.jpg" height="28" width="28" alt="" /> John Doe
+                                        <img className="rounded-circle" src="/assets/img/user.jpg" height="28" width="28" alt="" /> John Doe
                                     </td>
                                     <td>FT-0001</td>
                                     <td>johndoe@example.com</td>

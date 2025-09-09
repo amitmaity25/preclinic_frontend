@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import axios from "axios";
 import { lazy } from "react"
+import { authLoader } from "./authLoader";
 
 //LAYOUT
 const AdminLayout = lazy(() => import("../layout/AdminLayout"));
@@ -59,7 +60,7 @@ const router = createBrowserRouter([
             {
                 path: "home",
                 Component: AdminHomeLayout,
-                //loader:authCheck,
+                loader:authLoader(),
                 children: [
                     {
                         path: "",
@@ -76,6 +77,10 @@ const router = createBrowserRouter([
                                 path: "add-departments",
                                 Component: DepartmentForm, // /departments/add-departments
                             },
+                            {
+            path: "edit/:id",            // ✅ /departments/edit/1
+            Component: DepartmentForm,   // reuse DepartmentForm for editing
+        },
                         ]
                     },
                     {
