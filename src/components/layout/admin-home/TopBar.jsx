@@ -1,4 +1,43 @@
+
+import { useState, useRef, useEffect } from "react";
 const TopBar = () => {
+
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    useEffect(() => {
+        const checkSession = () => {
+            const loginTime = localStorage.getItem("loginTime");
+            if (loginTime) {
+                const now = Date.now();
+                const diff = now - parseInt(loginTime, 10);
+                const oneHour = 60 * 60 * 1000; // 1 hour in ms
+
+                if (diff >= oneHour) {
+                    localStorage.removeItem("authToken");
+                    localStorage.removeItem("loginTime");
+                    window.location.href = "/admin/login";
+                }
+            }
+        };
+
+        // Run immediately and then every minute
+        checkSession();
+        const interval = setInterval(checkSession, 60 * 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <div class="header">
             <div className="header-left">
@@ -21,7 +60,7 @@ const TopBar = () => {
                                     <a href="activities.html">
                                         <div className="media">
                                             <span className="avatar">
-                                                <img alt="John Doe" src="assets/img/user.jpg" className="img-fluid" />
+                                                <img alt="John Doe" src="/assets/img/user.jpg" className="img-fluid" />
                                             </span>
                                             <div className="media-body">
                                                 <p className="noti-details"><span className="noti-title">John Doe</span> added new task <span className="noti-title">Patient appointment booking</span></p>
@@ -84,23 +123,51 @@ const TopBar = () => {
                 <li className="nav-item dropdown d-none d-sm-block">
                     <a href="javascript:void(0);" id="open_msg_box" className="hasnotifications nav-link"><i className="fa fa-comment-o"></i> <span className="badge badge-pill bg-danger float-right">8</span></a>
                 </li>
-                <li className="nav-item dropdown has-arrow">
-                    <a href="#" className="dropdown-toggle nav-link user-link" data-toggle="dropdown">
+                <li
+                    className={`nav-item dropdown has-arrow ${isDropdownOpen ? "show" : ""}`}
+                    ref={dropdownRef}
+                >
+                    <button
+                        type="button"
+                        className="dropdown-toggle nav-link user-link"
+                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    >
                         <span className="user-img">
-                            <img className="rounded-circle" src="assets/img/user.jpg" width="24" alt="Admin" />
+                            <img
+                                className="rounded-circle"
+                                src="/assets/img/user.jpg"
+                                width="24"
+                                alt="Admin"
+                            />
                             <span className="status online"></span>
                         </span>
                         <span>Admin</span>
-                    </a>
-                    <div className="dropdown-menu">
-                        <a className="dropdown-item" href="profile.html">My Profile</a>
-                        <a className="dropdown-item" href="edit-profile.html">Edit Profile</a>
-                        <a className="dropdown-item" href="settings.html">Settings</a>
-                        <a className="dropdown-item" href="login.html">Logout</a>
-                    </div>
+                    </button>
+
+                    {isDropdownOpen && (
+                        <div className="dropdown-menu show">
+                            <a className="dropdown-item" href="profile.html">
+                                My Profile
+                            </a>
+                            <a className="dropdown-item" href="edit-profile.html">
+                                Edit Profile
+                            </a>
+                            <a className="dropdown-item" href="settings.html">
+                                Settings
+                            </a>
+                            <a className="dropdown-item" href="#" onClick={(e) => {
+                                e.preventDefault();
+                                localStorage.removeItem("authToken");   // destroy token
+                                window.location.href = "/admin/login";   // redirect
+                            }}>
+                                Logout
+                            </a>
+                            
+                        </div>
+                    )}
                 </li>
             </ul>
-            <div className="dropdown mobile-user-menu float-right">
+            {/* <div className="dropdown mobile-user-menu float-right">
                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fa fa-ellipsis-v"></i></a>
                 <div className="dropdown-menu dropdown-menu-right">
                     <a className="dropdown-item" href="profile.html">My Profile</a>
@@ -108,7 +175,7 @@ const TopBar = () => {
                     <a className="dropdown-item" href="settings.html">Settings</a>
                     <a className="dropdown-item" href="login.html">Logout</a>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };
