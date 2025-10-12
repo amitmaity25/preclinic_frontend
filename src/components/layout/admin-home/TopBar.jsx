@@ -1,5 +1,7 @@
 
 import { useState, useRef, useEffect } from "react";
+import { persistor } from "../../../store";
+
 const TopBar = () => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -157,6 +159,7 @@ const TopBar = () => {
                             </a>
                             <a className="dropdown-item" href="#" onClick={(e) => {
                                 e.preventDefault();
+                                persistor.purge()
                                 localStorage.removeItem("authToken");   // destroy token
                                 window.location.href = "/admin/login";   // redirect
                             }}>

@@ -6,7 +6,7 @@ export const loginAdmin = createAsyncThunk(
     "auth/loginAdmin",
     async (payload, { rejectWithValue }) => {       
         try {
-            const response = await apiClient.post("/api/auth/login", payload);
+            const response = await apiClient.post("/api/v1/auth/loginAdmin", payload);
             return response.data;
         } catch (error) {
             console.log(error);
@@ -25,6 +25,7 @@ const loginSlice = createSlice({
         loading: false,
         error: "",
         loginSuccess: false,
+        role: "",
     },
     reducers: {
         updateForm: (state, action) => {
@@ -38,8 +39,10 @@ const loginSlice = createSlice({
         builder.addCase(loginAdmin.fulfilled, (state, action) => {
             state.loading = false;
             state.error = "";           
-            localStorage.setItem(AUTH_TOKEN_KEY, action.payload.token);
+            localStorage.setItem(AUTH_TOKEN_KEY, action.payload.authToken);
             localStorage.setItem(LOGIN_TIME_KEY, Date.now().toString());
+            localStorage.setItem("Role", action.payload.admin.role);
+            state.role = action.payload.admin.role;
             state.loginSuccess = true;            
         });
 
