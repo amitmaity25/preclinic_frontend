@@ -4,7 +4,7 @@ import { updateForm, loginAdmin } from "../../store/slices/admin/loginSlice";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-    const { email, password, loading, error, loginSuccess } = useSelector((state) => state.auth);
+    const { email, password, loading, error, loginSuccess, role } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const handleInputChange = (e) => {
