@@ -6,7 +6,7 @@ export const fetchDepartments = createAsyncThunk(
   "department/fetchAll",
   async ({ page = 1, limit = 10 }, { rejectWithValue }) => {
     try {
-      const { data } = await apiClient.get(`/api/departments?page=${page}&limit=${limit}`);
+      const { data } = await apiClient.get(`/api/v1/departments?page=${page}&limit=${limit}`);
       return data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.error || err.message);
@@ -14,15 +14,16 @@ export const fetchDepartments = createAsyncThunk(
   }
 );
 
-// Fetch single
+// Fetch single department by ID
 export const fetchDepartmentById = createAsyncThunk(
   "department/fetchById",
   async (id, { rejectWithValue }) => {
     try {
-      const { data } = await apiClient.get(`/api/departments/${id}`);
-      return data;
+      const res = await apiClient.get(`/api/v1/departments/${id}`);
+      // unwrap: backend returns { success: true, data: dept }
+      return res.data.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.error || err.message);
+      return rejectWithValue(err.response?.data?.message || err.message);
     }
   }
 );
@@ -32,6 +33,7 @@ export const saveDepartment = createAsyncThunk(
   "department/save",
   async (payload, { rejectWithValue }) => {
     try {
+
       const { id, department_name, department_description, status } = payload;
 
       // Backend accepts department_name, department_description, status (0/1 or true/false)
@@ -42,10 +44,10 @@ export const saveDepartment = createAsyncThunk(
       };
 
       if (id) {
-        const { data } = await apiClient.put(`/api/departments/${id}`, body);
+        const { data } = await apiClient.put(`api/v1/departments/${id}`, body);
         return data;
       } else {
-        const { data } = await apiClient.post(`/api/departments`, body);
+        const { data } = await apiClient.post(`api/v1/departments`, body);
         return data;
       }
     } catch (err) {
@@ -59,10 +61,24 @@ export const deleteDepartment = createAsyncThunk(
   "department/delete",
   async (id, { rejectWithValue }) => {
     try {
-      await apiClient.delete(`/api/departments/${id}`);
+      await apiClient.delete(`api/v1/departments/${id}`);
       return id;
     } catch (err) {
       return rejectWithValue(err.response?.data?.error || err.message);
+    }
+  }
+);
+
+
+// ✅ Toggle Department Status
+export const updateDepartmentStatus = createAsyncThunk(
+  "departments/updateStatus",
+  async ({ id, status }, { rejectWithValue }) => {
+    try {
+      const { data } = await apiClient.patch(`/api/v1/departments/${id}/status`, { status });
+      return data.data; // return the updated department
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Status update failed");
     }
   }
 );
@@ -185,6 +201,25 @@ const departmentSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     });
+
+    builder.addCase(updateDepartmentStatus.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+
+    builder.addCase(updateDepartmentStatus.fulfilled, (state, action) => {
+      state.loading = false;
+      const updatedDept = action.payload;
+      const index = state.list.findIndex((d) => d._id === updatedDept._id);
+      if (index !== -1) state.list[index] = updatedDept;
+      state.successMessage = `Status updated successfully!`;
+    });
+
+    builder.addCase(updateDepartmentStatus.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload || "Failed to update status";
+    });
+
   }
 });
 
