@@ -4914,3 +4914,15 @@ blockquote p {
 		margin-bottom: 10px;
 	}
 }
+
+
+/* in your CSS */
+.dropdown-fade-enter {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+.dropdown-fade-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity .18s ease, transform .18s ease;
+}
