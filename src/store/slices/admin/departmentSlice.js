@@ -7,6 +7,7 @@ export const fetchDepartments = createAsyncThunk(
   async ({ page = 1, limit = 10 }, { rejectWithValue }) => {
     try {
       const { data } = await apiClient.get(`/api/v1/departments?page=${page}&limit=${limit}`);
+      console.log("Fetched departments:", data);
       return data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.error || err.message);
@@ -70,7 +71,7 @@ export const deleteDepartment = createAsyncThunk(
 );
 
 
-// ✅ Toggle Department Status
+// Toggle Department Status
 export const updateDepartmentStatus = createAsyncThunk(
   "departments/updateStatus",
   async ({ id, status }, { rejectWithValue }) => {
@@ -105,6 +106,7 @@ const departmentSlice = createSlice({
     },
     setForm(state, action) {
       const payload = action.payload || {};
+      console.log("Setting form with payload:", payload);
       state.id = payload.id ?? null;
       state.department_name = payload.department_name ?? payload.name ?? "";
       state.department_description = payload.department_description ?? payload.description ?? "";

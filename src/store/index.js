@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import loginSlice from "./slices/admin/loginSlice";
 import adminDepartmentReducer from "./slices/admin/departmentSlice";
+import adminDoctorReducer from "./slices/admin/doctorSlice";
 
 import {
   persistStore,
@@ -28,6 +29,7 @@ const store = configureStore({
   reducer: {
     auth: persistedAuthReducer,
     adminDepartmentSlice: adminDepartmentReducer,
+    adminDoctorSlice: adminDoctorReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

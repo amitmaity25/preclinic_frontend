@@ -272,30 +272,30 @@ const DepartmentsList = () => {
 
         {/* Pagination */}
         {pagination.totalPages > 0 && ( // or just remove the check entirely
-  <div className="card-footer bg-white border-0 pt-3 pb-4">
-    <div className="d-flex justify-content-center">
-      <nav>
-        <ul className="pagination mb-0">
-          {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
-            (page) => (
-              <li
-                key={page}
-                className={`page-item ${page === pagination.page ? "active" : ""}`}
-              >
-                <button
-                  className="page-link"
-                  onClick={() => handlePageChange(page)}
-                >
-                  {page}
-                </button>
-              </li>
-            )
+            <div className="card-footer bg-white border-0 pt-3 pb-4">
+              <div className="d-flex justify-content-center">
+                <nav>
+                  <ul className="pagination mb-0">
+                    {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
+                      (page) => (
+                        <li
+                          key={page}
+                          className={`page-item ${page === pagination.page ? "active" : ""}`}
+                        >
+                          <button
+                            className="page-link"
+                            onClick={() => handlePageChange(page)}
+                          >
+                            {page}
+                          </button>
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </nav>
+              </div>
+            </div>
           )}
-        </ul>
-      </nav>
-    </div>
-  </div>
-)}
 
       </div>
     </div>
